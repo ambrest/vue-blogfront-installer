@@ -45,7 +45,7 @@ services:
         image: mongo
         ports:
         - "%i:27017"
-""" % (args.name, args.domain, args.port, args.port, args.name, args.mongo)
+""" % (args.name, args.domain, args.port, args.name, args.mongo)
 
 nginx_conf = """
 

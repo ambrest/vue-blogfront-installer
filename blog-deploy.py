@@ -1,3 +1,4 @@
+import os
 import argparse
 
 parser = argparse.ArgumentParser(description='Create and deploy a vue-blog instance.')
@@ -32,7 +33,7 @@ services:
     blog:
         image: ambrest/vue-blog
         container_name: %s_blog
-        command: "https://%s:%i/api"
+        command: "https://%s/api"
         restart: always
         ports:
         - "%i:4000"

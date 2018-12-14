@@ -1,10 +1,46 @@
 #!/bin/bash
 read -p 'Name of the new blog instance: ' Name
 read -p 'Domain of the new blog instance: ' Domain
-read -p 'Port to expose: ' Port
-read -p 'Port for MongoDB to expose: ' Mongo
-read -p 'Start Docker (docker and docker-compose must be installed)? (y/n): ' Docker 
-read -p 'Start Certbot (certbot must be installed)? (y/n): ' Certbot 
+read -e -p 'Port to expose (default 4000): ' -i '4000' Port
+read -e -p 'Port for MongoDB to expose (default 27017): ' -i '27017' Mongo
+read -e -p 'Start Docker (docker and docker-compose must be installed)? (y/n): ' -i 'y' Docker 
+read -e -p 'Start Certbot (certbot must be installed)? (y/n): ' -i 'y' Certbot 
+
+# Create Domain folder
+mkdir $Domain
+cd $Domain
+
+# Install dependencies
+
+if [! -e /usr/sbin/nginx ]
+then
+    yum install epel-release -y
+    yum install nginx -y
+
+    systemctl start nginx
+    systemctl enable nginx
+fi
+
+if [! -e /usr/bin/docker ]
+then
+    yum install curl 
+    
+    curl -fsSL https://get.docker.com/ | sh
+
+    systemctl start docker
+    systemctl enable docker
+fi
+
+if [! -e /usr/bin/docker-compose ]
+then
+    yum install -y python-pip
+    pip install docker-compose
+fi
+
+if [! -e /usr/bin/certbot ]
+then
+    yum install python2-certbot-nginx
+fi
 
 # Docker-Compose config
 echo 'Creating docker-compose.yaml...'

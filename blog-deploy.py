@@ -1,6 +1,4 @@
-import yaml
 import argparse
-from subprocess import call
 
 parser = argparse.ArgumentParser(description='Create and deploy a vue-blog instance.')
 parser.add_argument('--name', '-n', help='Name of the new blog instance.', type=str)
@@ -68,11 +66,11 @@ print('Compose file created...')
 if args.deploy == True:
     print('Deploying...')
 
-    with open("/etc/nginx/conf.d/%s.conf", 'w') as file:
+    with open("/etc/nginx/conf.d/%s.conf" % (args.domain), 'w') as file:
         file.write(nginx_conf)
 
 if args.deploy_docker == True:
     print('Starting docker container...')
 
-    call(['docker-compose'], 'up', '-d')
+    os.system('docker-compose up -d')
     

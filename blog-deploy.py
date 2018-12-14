@@ -23,6 +23,7 @@ if args.mongo == None:
 
 args.deploy = (input('Automatically deploy instance with nginx? (y/n): ') == 'y')
 args.deploy_docker = (input('Automatically start docker instance? (y/n): ') == 'y')
+args.certbot = (input('Automatically start certbot? (y/n): ') == 'y')
 
 print('Creating compose file')
 
@@ -75,3 +76,9 @@ if args.deploy_docker == True:
 
     os.system('docker-compose up -d')
     
+if args.certbot == True:
+    os.system('certbot --nginx')
+
+os.system('systemctl restart nginx')
+
+print('Blog successfully installed!')

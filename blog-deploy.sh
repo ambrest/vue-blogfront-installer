@@ -36,8 +36,8 @@ read -e -p 'Start Docker (docker and docker-compose must be installed)? (y/n): '
 read -e -p 'Start Certbot (certbot must be installed)? (y/n): ' -i 'y' Certbot 
 
 # Create Domain folder
-mkdir /opt/ambrest/$Domain >/opt/ambrest/logs/$Domain.log
-cd /opt/ambrest/$Domain >/opt/ambrest/logs/$Domain.log
+mkdir /opt/ambrest/$Domain &>/opt/ambrest/logs/$Domain.log
+cd /opt/ambrest/$Domain &>/opt/ambrest/logs/$Domain.log
 
 # Install dependencies
 echo -e "Checking dependencies...\n"
@@ -45,43 +45,43 @@ echo -e "Checking dependencies...\n"
 if [[ ! -e /usr/sbin/nginx ]]; then
     echo "Installing NGINX..."
 
-    yum install -y epel-release >/opt/ambrest/logs/$Domain.log
-    yum install -y nginx >/opt/ambrest/logs/$Domain.log
+    yum install -y epel-release &>/opt/ambrest/logs/$Domain.log
+    yum install -y nginx &>/opt/ambrest/logs/$Domain.log
 
-    systemctl start nginx >/opt/ambrest/logs/$Domain.log
-    systemctl enable nginx >/opt/ambrest/logs/$Domain.log
+    systemctl start nginx &>/opt/ambrest/logs/$Domain.log
+    systemctl enable nginx &>/opt/ambrest/logs/$Domain.log
 fi
 
 if [[ ! -e /usr/bin/docker ]]; then
     echo "Installing Docker..."
 
-    yum install curl >/opt/ambrest/logs/$Domain.log 
+    yum install curl &>/opt/ambrest/logs/$Domain.log 
     
-    curl -fsSL https://get.docker.com/ | sh >/opt/ambrest/logs/$Domain.log
+    (curl -fsSL https://get.docker.com/ | sh) &>/opt/ambrest/logs/$Domain.log
 
-    systemctl start docker >/opt/ambrest/logs/$Domain.log
-    systemctl enable docker >/opt/ambrest/logs/$Domain.log
+    systemctl start docker &>/opt/ambrest/logs/$Domain.log
+    systemctl enable docker &>/opt/ambrest/logs/$Domain.log
 fi
 
 if [[ ! -e /usr/bin/docker-compose ]]; then
     echo "Installing Docker-Compose"
 
-    yum install -y python-pip >/opt/ambrest/logs/$Domain.log
+    yum install -y python-pip &>/opt/ambrest/logs/$Domain.log
 
-    pip install --upgrade pip >/opt/ambrest/logs/$Domain.log
+    pip install --upgrade pip &>/opt/ambrest/logs/$Domain.log
 
-    pip install docker-compose >/opt/ambrest/logs/$Domain.log
+    pip install docker-compose &>/opt/ambrest/logs/$Domain.log
 fi
 
 if [[ ! -e /usr/bin/certbot ]]; then
     echo "Installing Certbot..."
 
-    yum install -y python2-certbot-nginx >/opt/ambrest/logs/$Domain.log
+    yum install -y python2-certbot-nginx &>/opt/ambrest/logs/$Domain.log
 
-    pip install requests urllib3 pyOpenSSL --force --upgrade >/opt/ambrest/logs/$Domain.log
+    pip install requests urllib3 pyOpenSSL --force --upgrade &>/opt/ambrest/logs/$Domain.log
 
-    pip install requests==2.6.0 >/opt/ambrest/logs/$Domain.log
-    easy_install --upgrade pip >/opt/ambrest/logs/$Domain.log
+    pip install requests==2.6.0 &>/opt/ambrest/logs/$Domain.log
+    easy_install --upgrade pip &>/opt/ambrest/logs/$Domain.log
 fi
 
 echo -e "All dependencies installed!\n\n"
@@ -127,7 +127,7 @@ if [ $Docker = 'y' ]
 then
     echo 'Starting docker...'
 
-    docker-compose up -d
+    docker-compose up -d &>/opt/ambrest/logs/$Domain.log
 
     echo 'Docker started...'
 fi
@@ -136,11 +136,11 @@ if [ $Certbot = 'y' ]
 then
     echo 'Starting certbot...'
 
-    certbot --nginx
+    certbot --nginx &>/opt/ambrest/logs/$Domain.log
 
     echo 'Certbot done...'
 fi
 
-systemctl restart nginx >/opt/ambrest/logs/$Domain.log
+systemctl restart nginx &>/opt/ambrest/logs/$Domain.log
 
 echo 'Blog successfully installed!'

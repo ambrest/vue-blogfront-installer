@@ -9,31 +9,46 @@ if [[ ! -d /opt/ambrest ]]; then
     mkdir /opt/ambrest/logs >/dev/null
 fi
 
+#Colors!
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+LIGHTBLUE='\033[1;34m'
+PURPLE='\033[1;37m'
+
+NC='\033[0m'
+
 #Ask questions
 
 NUMBER=$RANDOM
 
-echo -e "Welcome to the Ambrest Designs LLC vue-blogfront installer!"
-echo -e "This installer is provided WITHOUT WARRANTY.\n\n"
+echo -e "\n\nWelcome to the ${LIGHTBLUE}Ambrest Designs LLC${NC} ${PURPLE}vue-blogfront${NC} installer!\n"
 
-echo -e "This installer currently ONLY works on CentOS7\n"
+echo -e "This installer is provided ${RED}WITHOUT WARRANTY${NC}.\n\n"
 
-echo -e "To confirm that you have read and fully understand and agree to the above statements and the vue-blogfront license found at https://git.ambrest.io/Ambrest-Designs-LLC/vue-blogfront, please type the following numbers: ${NUMBER}"
+
+echo -e "${RED}This installer currently ONLY works on CentOS7${NC}\n"
+
+echo -e "To confirm that you have read and fully understand and agree to the above statements and the vue-blogfront license found at ${PURPLE}https://git.ambrest.io/Ambrest-Designs-LLC/vue-blogfront${NC}, please type the following numbers: ${NUMBER}"
 
 read -p 'The numbers: ' UserInput
 
 if [[ ! $UserInput = $NUMBER ]]; then
-    echo -e "\n\nYour input is incorrect. Please fully read the above statements and try again"
+    echo -e "\n\n${RED}Your input is incorrect. Please fully read the above statements and try again${NC}"
     exit
 fi
+
+echo -e "\n\n"
 
 read -p 'Name of the new blog instance: ' Name
 read -p 'Display name of the new blog instance: ' Displayname
 read -p 'Domain of the new blog instance: ' Domain
 read -e -p 'Port to expose (default 4000): ' -i '4000' Port
 read -e -p 'Port for MongoDB to expose (default 27017): ' -i '27017' Mongo
-read -e -p 'Start Docker (docker and docker-compose must be installed)? (y/n): ' -i 'y' Docker 
-read -e -p 'Start Certbot (certbot must be installed)? (y/n): ' -i 'y' Certbot 
+
+echo -e "\n"
+
+read -e -p 'Start Docker? (y/n): ' -i 'y' Docker 
+read -e -p 'Start Certbot? (y/n): ' -i 'y' Certbot 
 
 # Create Domain folder
 mkdir /opt/ambrest/$Domain &>/opt/ambrest/logs/$Domain.log
@@ -84,7 +99,7 @@ if [[ ! -e /usr/bin/certbot ]]; then
     easy_install --upgrade pip &>/opt/ambrest/logs/$Domain.log
 fi
 
-echo -e "All dependencies installed!\n\n"
+echo -e "\n${GREEN}All dependencies installed!${NC}\n\n"
 
 # Docker-Compose config
 echo 'Creating docker-compose.yaml...'
@@ -129,7 +144,7 @@ then
 
     docker-compose up -d &>/opt/ambrest/logs/$Domain.log
 
-    echo 'Docker started...'
+    echo -e "${GREEN}Docker started..${NC}."
 fi
 
 if [ $Certbot = 'y' ]
@@ -138,9 +153,9 @@ then
 
     certbot --nginx 
 
-    echo 'Certbot done...'
+    echo -e "${GREEN}Certbot done..${NC}."
 fi
 
 systemctl restart nginx &>/opt/ambrest/logs/$Domain.log
 
-echo 'Blog successfully installed!'
+echo -e "\n\n${PURPLE}vue-blogfront${NC} ${GREEN}installed successfully!${NC}"

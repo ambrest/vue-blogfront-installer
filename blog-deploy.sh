@@ -13,17 +13,17 @@ fi
 
 NUMBER=$RANDOM
 
-echo "Welcome to the Ambrest Designs LLC vue-blogfront installer!"
-echo "This installer is provided WITHOUT WARRANTY.\n\n"
+echo -e "Welcome to the Ambrest Designs LLC vue-blogfront installer!"
+echo -e "This installer is provided WITHOUT WARRANTY.\n\n"
 
-echo "This installer currently ONLY works on CentOS7\n"
+echo -e "This installer currently ONLY works on CentOS7\n"
 
-echo "To confirm that you have read and fully understand and agree to the above statements and the vue-blogfront license found at https://git.ambrest.io/Ambrest-Designs-LLC/vue-blogfront, please type the following numbers: ${Number}"
+echo -e "To confirm that you have read and fully understand and agree to the above statements and the vue-blogfront license found at https://git.ambrest.io/Ambrest-Designs-LLC/vue-blogfront, please type the following numbers: ${NUMBER}"
 
 read -p 'The numbers: ' UserInput
 
 if [[ ! $UserInput = $NUMBER ]]; then
-    echo "\n\nYour input is incorrect. Please fully read the above statements and try again"
+    echo -e "\n\nYour input is incorrect. Please fully read the above statements and try again"
     exit
 fi
 
@@ -40,7 +40,7 @@ mkdir /opt/ambrest/$Domain >/opt/ambrest/logs/$Domain.log
 cd /opt/ambrest/$Domain >/opt/ambrest/logs/$Domain.log
 
 # Install dependencies
-echo "Checking dependencies...\n"
+echo -e "Checking dependencies...\n"
 
 if [[ ! -e /usr/sbin/nginx ]]; then
     echo "Installing NGINX..."
@@ -84,7 +84,7 @@ if [[ ! -e /usr/bin/certbot ]]; then
     easy_install --upgrade pip >/opt/ambrest/logs/$Domain.log
 fi
 
-echo "All dependencies installed!\n\n"
+echo -e "All dependencies installed!\n\n"
 
 # Docker-Compose config
 echo 'Creating docker-compose.yaml...'

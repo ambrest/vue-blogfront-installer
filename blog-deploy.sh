@@ -13,7 +13,7 @@ fi
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 LIGHTBLUE='\033[1;34m'
-PURPLE='\033[1;37m'
+PURPLE='\033[1;35m'
 
 NC='\033[0m'
 
@@ -28,16 +28,16 @@ echo -e "This installer is provided ${RED}WITHOUT WARRANTY${NC}.\n\n"
 
 echo -e "${RED}This installer currently ONLY works on CentOS7${NC}\n"
 
-echo -e "To confirm that you have read and fully understand and agree to the above statements and the vue-blogfront license found at ${PURPLE}https://git.ambrest.io/Ambrest-Designs-LLC/vue-blogfront${NC}, please type the following numbers: ${NUMBER}"
+echo -e "To confirm that you have read and fully understand and agree to the above statements and the ${PURPLE}vue-blogfront${NC} license found at ${PURPLE}https://git.ambrest.io/Ambrest-Designs-LLC/vue-blogfront${NC}, please type the following numbers: ${NUMBER}"
 
 read -p 'The numbers: ' UserInput
 
 if [[ ! $UserInput = $NUMBER ]]; then
-    echo -e "\n\n${RED}Your input is incorrect. Please fully read the above statements and try again${NC}"
+    echo -e "\n${RED}Your input is incorrect. Please fully read the above statements and try again${NC}"
     exit
 fi
 
-echo -e "\n\n"
+echo -e "\n"
 
 read -p 'Name of the new blog instance: ' Name
 read -p 'Display name of the new blog instance: ' Displayname
@@ -55,7 +55,7 @@ mkdir /opt/ambrest/$Domain &>/opt/ambrest/logs/$Domain.log
 cd /opt/ambrest/$Domain &>/opt/ambrest/logs/$Domain.log
 
 # Install dependencies
-echo -e "Checking dependencies...\n"
+echo -e "\nChecking dependencies...\n"
 
 if [[ ! -e /usr/sbin/nginx ]]; then
     echo "Installing NGINX..."
@@ -79,7 +79,7 @@ if [[ ! -e /usr/bin/docker ]]; then
 fi
 
 if [[ ! -e /usr/bin/docker-compose ]]; then
-    echo "Installing Docker-Compose"
+    echo "Installing Docker-Compose..."
 
     yum install -y python-pip &>/opt/ambrest/logs/$Domain.log
 
@@ -144,7 +144,7 @@ then
 
     docker-compose up -d &>/opt/ambrest/logs/$Domain.log
 
-    echo -e "${GREEN}Docker started..${NC}."
+    echo -e "${GREEN}Docker started...${NC}"
 fi
 
 if [ $Certbot = 'y' ]
@@ -153,7 +153,7 @@ then
 
     certbot --nginx 
 
-    echo -e "${GREEN}Certbot done..${NC}."
+    echo -e "${GREEN}Certbot done...${NC}"
 fi
 
 systemctl restart nginx &>/opt/ambrest/logs/$Domain.log

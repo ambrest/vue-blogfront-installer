@@ -1,4 +1,7 @@
 #!/bin/bash
+
+# to run: bash <(curl -s0 https://get-blog.ambrest.io)
+
 read -p 'Name of the new blog instance: ' Name
 read -p 'Domain of the new blog instance: ' Domain
 read -e -p 'Port to expose (default 4000): ' -i '4000' Port
@@ -6,23 +9,26 @@ read -e -p 'Port for MongoDB to expose (default 27017): ' -i '27017' Mongo
 read -e -p 'Start Docker (docker and docker-compose must be installed)? (y/n): ' -i 'y' Docker 
 read -e -p 'Start Certbot (certbot must be installed)? (y/n): ' -i 'y' Certbot 
 
+# If ambrest designs folder isn't present, create it
+if [[ ! -d /opt/ambrest ]]; then
+    mkdir /opt/ambrest
+fi
+
 # Create Domain folder
-mkdir $Domain
-cd $Domain
+mkdir /opt/ambrest/$Domain
+cd /opt/ambrest/$Domain
 
 # Install dependencies
 
-if [! -e /usr/sbin/nginx ]
-then
-    yum install epel-release -y
-    yum install nginx -y
+if [[ ! -e /usr/sbin/nginx ]]; then
+    yum install -y epel-release 
+    yum install -y nginx 
 
     systemctl start nginx
     systemctl enable nginx
 fi
 
-if [! -e /usr/bin/docker ]
-then
+if [[ ! -e /usr/bin/docker ]]; then
     yum install curl 
     
     curl -fsSL https://get.docker.com/ | sh
@@ -31,15 +37,13 @@ then
     systemctl enable docker
 fi
 
-if [! -e /usr/bin/docker-compose ]
-then
+if [[ ! -e /usr/bin/docker-compose ]]; then
     yum install -y python-pip
     pip install docker-compose
 fi
 
-if [! -e /usr/bin/certbot ]
-then
-    yum install python2-certbot-nginx
+if [[ ! -e /usr/bin/certbot ]]; then
+    yum install -y python2-certbot-nginx
 fi
 
 # Docker-Compose config

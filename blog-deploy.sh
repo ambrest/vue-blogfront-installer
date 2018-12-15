@@ -3,6 +3,7 @@
 # to run: bash <(curl -s0 https://get-blog.ambrest.io)
 
 read -p 'Name of the new blog instance: ' Name
+read -p 'Display name of the new blog instance: ' Displayname
 read -p 'Domain of the new blog instance: ' Domain
 read -e -p 'Port to expose (default 4000): ' -i '4000' Port
 read -e -p 'Port for MongoDB to expose (default 27017): ' -i '27017' Mongo
@@ -61,7 +62,9 @@ services:
     blog:
         image: ambrest/vue-blog
         container_name: ${Name}_blog
-        command: "https://${Domain}/api"
+        command: 
+        - "https://${Domain}/api"
+        - ${Displayname}
         restart: always
         ports:
         - "${Port}:4000"
@@ -70,6 +73,8 @@ services:
     mongo:
         container_name: ${Name}_mongo
         image: mongo
+        volumes:
+        - ./data:/data/db
         ports:
         - "${Mongo}:27017"
 EOL

@@ -12,20 +12,6 @@ RUN npm install -g json
 RUN mkdir /opt/ambrest
 RUN mkdir /opt/ambrest/vue-blog
 
-# Grab the repositories
-
-WORKDIR /tmp
-
-RUN git clone https://git.ambrest.io/Ambrest-Designs-LLC/vue-blogfront.git
-
-WORKDIR vue-blogfront
-RUN npm install
-
-RUN git clone https://git.ambrest.io/Ambrest-Designs-LLC/vue-blog-backend.git /opt/ambrest/vue-blog/backend
-
-WORKDIR /opt/ambrest/vue-blog/backend
-RUN npm install
-
 WORKDIR /
 
 COPY . .

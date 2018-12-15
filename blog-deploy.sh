@@ -136,7 +136,7 @@ if [ $Certbot = 'y' ]
 then
     echo 'Starting certbot...'
 
-    certbot --nginx &>/opt/ambrest/logs/$Domain.log
+    certbot --nginx 
 
     echo 'Certbot done...'
 fi

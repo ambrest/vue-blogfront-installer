@@ -23,6 +23,8 @@ npm run build
 echo "Copying files..."
 cp -r ./dist /opt/ambrest/vue-blog/dist
 
+cd /opt/ambrest/vue-blog
+
 echo "Removing source..."
 rm -rf /tmp/vue-blogfront
 

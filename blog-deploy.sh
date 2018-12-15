@@ -2,6 +2,31 @@
 
 # to run: bash <(curl -s0 https://get-blog.ambrest.io)
 
+# Logs
+# If ambrest designs folder isn't present, create it
+if [[ ! -d /opt/ambrest ]]; then
+    mkdir /opt/ambrest >/dev/null
+    mkdir /opt/ambrest/logs >/dev/null
+fi
+
+#Ask questions
+
+NUMBER=$RANDOM
+
+echo "Welcome to the Ambrest Designs LLC vue-blogfront installer!"
+echo "This installer is provided WITHOUT WARRANTY.\n\n"
+
+echo "This installer currently ONLY works on CentOS7\n"
+
+echo "To confirm that you have read and fully understand and agree to the above statements and the vue-blogfront license found at https://git.ambrest.io/Ambrest-Designs-LLC/vue-blogfront, please type the following numbers: ${Number}"
+
+read -p 'The numbers: ' UserInput
+
+if [[ ! $UserInput = $NUMBER ]]; then
+    echo "\n\nYour input is incorrect. Please fully read the above statements and try again"
+    exit
+fi
+
 read -p 'Name of the new blog instance: ' Name
 read -p 'Display name of the new blog instance: ' Displayname
 read -p 'Domain of the new blog instance: ' Domain
@@ -10,49 +35,56 @@ read -e -p 'Port for MongoDB to expose (default 27017): ' -i '27017' Mongo
 read -e -p 'Start Docker (docker and docker-compose must be installed)? (y/n): ' -i 'y' Docker 
 read -e -p 'Start Certbot (certbot must be installed)? (y/n): ' -i 'y' Certbot 
 
-# If ambrest designs folder isn't present, create it
-if [[ ! -d /opt/ambrest ]]; then
-    mkdir /opt/ambrest
-fi
-
 # Create Domain folder
-mkdir /opt/ambrest/$Domain
-cd /opt/ambrest/$Domain
+mkdir /opt/ambrest/$Domain >/opt/ambrest/logs/$Domain.log
+cd /opt/ambrest/$Domain >/opt/ambrest/logs/$Domain.log
 
 # Install dependencies
-if [[ ! -e /usr/sbin/nginx ]]; then
-    yum install -y epel-release 
-    yum install -y nginx 
+echo "Checking dependencies...\n"
 
-    systemctl start nginx
-    systemctl enable nginx
+if [[ ! -e /usr/sbin/nginx ]]; then
+    echo "Installing NGINX..."
+
+    yum install -y epel-release >/opt/ambrest/logs/$Domain.log
+    yum install -y nginx >/opt/ambrest/logs/$Domain.log
+
+    systemctl start nginx >/opt/ambrest/logs/$Domain.log
+    systemctl enable nginx >/opt/ambrest/logs/$Domain.log
 fi
 
 if [[ ! -e /usr/bin/docker ]]; then
-    yum install curl 
-    
-    curl -fsSL https://get.docker.com/ | sh
+    echo "Installing Docker..."
 
-    systemctl start docker
-    systemctl enable docker
+    yum install curl >/opt/ambrest/logs/$Domain.log 
+    
+    curl -fsSL https://get.docker.com/ | sh >/opt/ambrest/logs/$Domain.log
+
+    systemctl start docker >/opt/ambrest/logs/$Domain.log
+    systemctl enable docker >/opt/ambrest/logs/$Domain.log
 fi
 
 if [[ ! -e /usr/bin/docker-compose ]]; then
-    yum install -y python-pip
+    echo "Installing Docker-Compose"
 
-    pip install --upgrade pip
+    yum install -y python-pip >/opt/ambrest/logs/$Domain.log
 
-    pip install docker-compose
+    pip install --upgrade pip >/opt/ambrest/logs/$Domain.log
+
+    pip install docker-compose >/opt/ambrest/logs/$Domain.log
 fi
 
 if [[ ! -e /usr/bin/certbot ]]; then
-    yum install -y python2-certbot-nginx
+    echo "Installing Certbot..."
 
-    pip install requests urllib3 pyOpenSSL --force --upgrade
+    yum install -y python2-certbot-nginx >/opt/ambrest/logs/$Domain.log
 
-    pip install requests==2.6.0
-    easy_install --upgrade pip
+    pip install requests urllib3 pyOpenSSL --force --upgrade >/opt/ambrest/logs/$Domain.log
+
+    pip install requests==2.6.0 >/opt/ambrest/logs/$Domain.log
+    easy_install --upgrade pip >/opt/ambrest/logs/$Domain.log
 fi
+
+echo "All dependencies installed!\n\n"
 
 # Docker-Compose config
 echo 'Creating docker-compose.yaml...'
@@ -80,7 +112,7 @@ services:
 EOL
 
 # Nginx configuration
-echo 'Creating NGINX config'
+echo 'Creating NGINX config...'
 cat > /etc/nginx/conf.d/$Domain.conf <<EOL
 server {
     listen 80;
@@ -109,6 +141,6 @@ then
     echo 'Certbot done...'
 fi
 
-systemctl restart nginx
+systemctl restart nginx >/opt/ambrest/logs/$Domain.log
 
 echo 'Blog successfully installed!'

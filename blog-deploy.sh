@@ -48,6 +48,8 @@ if [[ ! -e /usr/bin/certbot ]]; then
     yum install -y python2-certbot-nginx
 
     pip install requests urllib3 pyOpenSSL --force --upgrade
+
+    pip install requests==2.6.0
     easy_install --upgrade pip
 fi
 
@@ -62,7 +64,7 @@ services:
         command: "https://${Domain}/api"
         restart: always
         ports:
-        - "%{Port}:4000"
+        - "${Port}:4000"
         depends_on:
         - mongo
     mongo:

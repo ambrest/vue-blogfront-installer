@@ -19,7 +19,6 @@ mkdir /opt/ambrest/$Domain
 cd /opt/ambrest/$Domain
 
 # Install dependencies
-
 if [[ ! -e /usr/sbin/nginx ]]; then
     yum install -y epel-release 
     yum install -y nginx 
@@ -39,11 +38,17 @@ fi
 
 if [[ ! -e /usr/bin/docker-compose ]]; then
     yum install -y python-pip
+
+    pip install --upgrade pip
+
     pip install docker-compose
 fi
 
 if [[ ! -e /usr/bin/certbot ]]; then
     yum install -y python2-certbot-nginx
+
+    pip install requests urllib3 pyOpenSSL --force --upgrade
+    easy_install --upgrade pip
 fi
 
 # Docker-Compose config

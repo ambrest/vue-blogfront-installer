@@ -9,13 +9,13 @@ PURPLE='\033[1;35m'
 NC='\033[0m'
 
 cd /opt/ambrest/blogs
-for d in */; do
+for d in *; do
     echo -e "${GREEN}Updating $d...${NC}"
 
     cd "$d"
 
-    docker-compose down &> "/opt/ambrest/logs/${d}update.log"
-    docker-compose up &> "/opt/ambrest/logs/${d}update.log"
+    docker-compose down &> "/opt/ambrest/logs/${d}.log"
+    docker-compose up &> "/opt/ambrest/logs/${d}.log"
 
     cd ..
 done

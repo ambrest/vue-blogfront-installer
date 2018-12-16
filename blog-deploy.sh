@@ -144,7 +144,7 @@ if [[ ! -e /usr/bin/certbot ]]; then
         pip install requests==2.6.0 &>/opt/ambrest/logs/$Domain.log
         easy_install --upgrade pip &>/opt/ambrest/logs/$Domain.log
     else 
-        apt install python-certbot-nginx
+        apt install -y python-certbot-nginx
     fi
 fi
 

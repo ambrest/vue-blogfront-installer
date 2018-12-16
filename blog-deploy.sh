@@ -81,12 +81,12 @@ OS=$NAME
 PackageManager=""
 
 # Install on Debian
-if [ $OS = $DEBIAN ]; then
+if [[ $OS = $DEBIAN ]; then
 
     PackageManager="apt"
 
 # Install on CentOS
-elif [ $OS = $CENTOS ]; then
+elif [[ $OS = $CENTOS ]]; then
 
     PackageManager="yum"
 
@@ -97,7 +97,7 @@ else
 fi
 
 # EPEL-Release is needed for about everything
-if [ $OS = $CENTOS ]; then
+if [[ $OS = $CENTOS ]]; then
     yum install -y epel-release &>/opt/ambrest/logs/$Domain.log
 fi
 
@@ -136,7 +136,7 @@ fi
 if [[ ! -e /usr/bin/certbot ]]; then
     echo "Installing Certbot..."
 
-    if [ $OS = $CENTOS ]; then 
+    if [[ $OS = $CENTOS ]]; then 
         yum install -y python2-certbot-nginx &>/opt/ambrest/logs/$Domain.log
 
         pip install requests urllib3 pyOpenSSL --force --upgrade &>/opt/ambrest/logs/$Domain.log
@@ -189,7 +189,7 @@ EOL
 
 echo -e "\n"
 
-if [ $Docker = 'y' ]; then
+if [[ $Docker = 'y' ]]; then
     echo 'Starting docker...'
 
     docker-compose up -d &>/opt/ambrest/logs/$Domain.log
@@ -197,7 +197,7 @@ if [ $Docker = 'y' ]; then
     echo -e "${GREEN}Docker started...${NC}\n"
 fi
 
-if [ $Certbot = 'y' ]; then
+if [[ $Certbot = 'y' ]]; then
     echo 'Starting certbot...'
 
     certbot --nginx 

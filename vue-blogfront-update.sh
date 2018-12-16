@@ -14,8 +14,8 @@ for d in */; do
 
     cd "$d"
 
-    docker-compose down &> "/opt/ambrest/logs/$d.log"
-    docker-compose up &> "/opt/ambrest/logs/$d.log"
+    docker-compose down &> "/opt/ambrest/logs/${d}update.log"
+    docker-compose up &> "/opt/ambrest/logs/${d}update.log"
 
     cd ..
 done

@@ -8,7 +8,6 @@ cd /tmp
 echo "Updating vue-blogfront..."
 git clone https://git.ambrest.io/Ambrest-Designs-LLC/vue-blogfront.git
 cd /tmp/vue-blogfront
-git checkout production
 
 echo "Configuring vue-blogfront..."
 json -I -f ./config/config.json -e "this.apiEndPoint='$1'"
@@ -32,7 +31,6 @@ rm -rf /tmp/vue-blogfront
 echo "Updating vue-blogfront-api..."
 git clone https://git.ambrest.io/Ambrest-Designs-LLC/vue-blogfront-api.git /opt/ambrest/vue-blog/backend
 cd /opt/ambrest/vue-blog/backend
-git checkout production
 
 echo "Installing vue-blogfront-api dependencies..."
 npm install

@@ -19,6 +19,7 @@ read -e -p 'Start Certbot? (y/n): ' -i 'y' Certbot
 
 # Create Domain folder
 mkdir /opt/ambrest/blogs/$Domain &>/opt/ambrest/logs/$Domain.log
+mkdir /opt/ambrest/blogs/$Domain/config &>/opt/ambrest/logs/$Domain.log
 cd /opt/ambrest/blogs/$Domain &>/opt/ambrest/logs/$Domain.log
 
 # Install dependencies
@@ -104,17 +105,16 @@ fi
 echo -e "\n${GREEN}All dependencies installed!${NC}\n\n"
 
 # Docker-Compose config
-echo 'Creating docker-compose.yaml...'
+echo 'Creating docker configuration...'
 cat >./docker-compose.yaml <<EOL
 version: '3'
 services:
     blog:
         image: ambrest/vue-blog
         container_name: ${Name}_blog
-        command: 
-        - "https://${Domain}/api"
-        - ${Displayname}
         restart: always
+        volumes:
+        - ./config:/config
         ports:
         - "${Port}:4000"
         depends_on:
@@ -122,6 +122,7 @@ services:
     mongo:
         container_name: ${Name}_mongo
         image: mongo
+        restart: always
         volumes:
         - ./data:/data/db
         ports:
@@ -129,13 +130,62 @@ services:
 EOL
 
 # Nginx configuration
-echo 'Creating NGINX config...'
+echo 'Creating NGINX configuration...'
 cat > /etc/nginx/conf.d/$Domain.conf <<EOL
 server {
     listen 80;
     server_name ${Domain};
     location / {
         proxy_pass http://localhost:${Port};
+    }
+}
+EOL
+
+# vue-blogfront configuration
+echo 'Creating vue-blogfront configuration...'
+cat > ./config/blogfront.config.json <<EOL
+{
+    "pageTitle": "${Displayname}",
+    "themeColor": "#C62642",
+    "apiEndPoint": "https://${Domain}/api",
+    "wordsPerMinute": 250,
+
+    "meta": {
+        "description": "Vue blogfront - PWA for blogs. 100% Offline.",
+        "keywords": "Blog,Blog-engine,Vue-app,Vue,Vue2,PWA,SPA,WebApp",
+        "author": "Ambrest Designs"
+    }
+}
+EOL
+
+# vue-blogfront-api configuration
+echo 'Creating vue-blogfront-api configuration...'
+cat > ./config/api.config.json <<EOL
+{
+    "info": {
+        "author": "Ambrest Designs LLC",
+        "title": "${Displayname}",
+        "version": 1.0
+    },
+    "server": {
+        "port": 4000,
+        "startingMessage": "Server started on port 4000...",
+        "domain": "https://${Domain}",
+        "api": "https://${Domain}",
+        "emailVerification": false
+    },
+    "mail": {
+        "service": "",
+        "secure": "",
+        "port": 0,
+        "auth": {
+            "user": "",
+            "pass": ""
+        }
+    },
+    "auth": {
+        "apikeyExpiry": 12960000000,
+        "saltRounds": 10
     }
 }
 EOL
@@ -161,3 +211,5 @@ fi
 systemctl restart nginx &>/opt/ambrest/logs/$Domain.log
 
 echo -e "\n\n${PURPLE}vue-blogfront${NC} ${GREEN}installed successfully!${NC}\n"
+
+echo -e "You can furthur configure your ${PURPLE}vue-blogfront${NC} instance in /opt/ambrest/${Domain}/config, then run ${PURPLE}vue-blogfront update${NC}.\n"

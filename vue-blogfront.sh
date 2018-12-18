@@ -15,9 +15,9 @@ DEBIAN="Debian GNU/Linux"
 OS=$NAME
 
 if [ "$OS" = "$DEBIAN" ]; then
-    echo "OS: $DEBIAN\n"
+    echo -e "OS: $DEBIAN\n"
 elif [ "$OS" = "$CENTOS" ]; then
-    echo "OS: $CENTOS\n"
+    echo -e "OS: $CENTOS\n"
 else
     echo -e "\n${RED}Your Linux distribution is NOT supported! Do you really think we're dumb enough to let that slide?${NC}"
     echo -e "\nPlease visit https://github.com/ambrest/vue-blogfront for manual installation instructions, and next time read the damn instructions."

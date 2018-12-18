@@ -10,8 +10,8 @@ git clone https://git.ambrest.io/Ambrest-Designs-LLC/vue-blogfront.git
 cd /tmp/vue-blogfront
 
 echo "Configuring vue-blogfront..."
-json -I -f ./config/config.json -e "this.apiEndPoint='$1'"
-json -I -f ./config/config.json -e "this.pageTitle='$2'"
+rm -rf ./config/config.json
+cp -r /config/blogfront.config.json ./config/config.json
 
 echo "Installing vue-blogfront dependencies..."
 npm install
@@ -36,7 +36,8 @@ echo "Installing vue-blogfront-api dependencies..."
 npm install
 
 echo "Configuring vue-blogfront-api..."
-npm run configure
+rm -rf ./config/config.json
+cp -r /config/api.config.json ./config/config.json
 
 echo "Launching application..."
 npm run launch-docker

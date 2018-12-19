@@ -6,8 +6,6 @@ RUN apt-get update
 RUN apt-get upgrade -y
 RUN apt-get install git -y
 
-RUN npm install -g json
-
 # Setup directories
 RUN mkdir /config
 RUN mkdir /opt/ambrest

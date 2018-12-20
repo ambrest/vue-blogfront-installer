@@ -195,7 +195,7 @@ echo -e "\n"
 if [ $Docker = 'y' ]; then
     echo 'Starting docker...'
 
-    docker-compose up -d &>/opt/ambrest/logs/$Domain.log
+    docker-compose pull && docker-compose up -d &>/opt/ambrest/logs/$Domain.log
 
     echo -e "${GREEN}Docker started...${NC}\n"
 fi

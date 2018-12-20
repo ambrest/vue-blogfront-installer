@@ -19,3 +19,5 @@ for d in *; do
 
     cd ..
 done
+
+echo -e "\n${GREEN}Updates Installed...${NC}"

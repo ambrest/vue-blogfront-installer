@@ -24,7 +24,7 @@ if [[ ! $UserInput = $NUMBER ]]; then
     exit
 fi
 
-if [ -d /opt/ambrest/blogs/$1 ]; then
+if [ -d /opt/ambrest/blogs/$1/ ]; then
     cd /opt/ambrest/blogs/$1
 
     docker-compose down
@@ -36,5 +36,5 @@ if [ -d /opt/ambrest/blogs/$1 ]; then
 
     echo -e "\n\n${GREEN}$1 was successfully uninstalled!${NC}"
 else
-    echo -e "\n${RED}Could not find $1${NC}"
+    echo -e "\n${RED}Could not find the domain: $1${NC}"
 fi

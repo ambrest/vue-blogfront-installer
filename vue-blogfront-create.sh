@@ -149,6 +149,7 @@ cat > ./config/blogfront.config.json <<EOL
     "themeColor": "#C62642",
     "apiEndPoint": "https://${Domain}/api",
     "wordsPerMinute": 250,
+    "postsPreloadAmount": 3,
 
     "meta": {
         "description": "Vue blogfront - PWA for blogs. 100% Offline.",

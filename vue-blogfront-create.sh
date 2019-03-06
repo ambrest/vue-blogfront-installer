@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 echo -e "\n\nDuring this installation, the following dependencies will be installed if they are not already present:"
 echo -e "   * Nginx"
 echo -e "   * Docker"
@@ -14,8 +15,8 @@ read -e -p 'Port for MongoDB to expose (default 27017): ' -i '27017' Mongo
 
 echo -e "\n"
 
-read -e -p 'Start Docker? (y/n): ' -i 'y' Docker 
-read -e -p 'Start Certbot? (y/n): ' -i 'y' Certbot 
+read -e -p 'Start Docker? (y/n): ' -i 'y' Docker
+read -e -p 'Start Certbot? (y/n): ' -i 'y' Certbot
 
 # Create Domain folder
 mkdir /opt/ambrest/blogs/$Domain &>/opt/ambrest/logs/$Domain.log
@@ -68,7 +69,7 @@ fi
 # Docker
 if [[ ! -e /usr/bin/docker ]]; then
     echo "Installing Docker..."
-    
+
     (curl -fsSL https://get.docker.com/ | sh) &>/opt/ambrest/logs/$Domain.log
 
     systemctl start docker &>/opt/ambrest/logs/$Domain.log
@@ -90,14 +91,14 @@ fi
 if [[ ! -e /usr/bin/certbot ]]; then
     echo "Installing Certbot..."
 
-    if [ "$OS" = "$CENTOS" ]; then 
+    if [ "$OS" = "$CENTOS" ]; then
         yum install -y python2-certbot-nginx &>/opt/ambrest/logs/$Domain.log
 
         pip install requests urllib3 pyOpenSSL --force --upgrade &>/opt/ambrest/logs/$Domain.log
 
         pip install requests==2.6.0 &>/opt/ambrest/logs/$Domain.log
         easy_install --upgrade pip &>/opt/ambrest/logs/$Domain.log
-    else 
+    else
         apt install -y python-certbot-nginx
     fi
 fi
@@ -135,9 +136,33 @@ cat > /etc/nginx/conf.d/$Domain.conf <<EOL
 server {
     listen 80;
     server_name ${Domain};
+
     location / {
         proxy_pass http://localhost:${Port};
     }
+
+    # Restrict TLS protocols and some ssl improvements
+    ssl_protocols TLSv1.2;
+    ssl_ecdh_curve secp521r1:secp384r1;
+
+    # Hide upstream proxy headers
+    proxy_hide_header X-Powered-By;
+    proxy_hide_header X-AspNetMvc-Version;
+    proxy_hide_header X-AspNet-Version;
+    proxy_hide_header X-Drupal-Cache;
+    # Custom headers
+    add_header Strict-Transport-Security "max-age=63072000; includeSubdomains" always;
+    add_header Referrer-Policy "no-referrer";
+    add_header Feature-Policy "geolocation none; midi none; notifications none; push none; sync-xhr none; microphone none; camera none; magnetometer none; gyroscope none; speaker none; vibrate none; fullscreen self; payment none; usb none;";
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+
+    # Close slow connections (in case of slow loris attack)
+    client_body_timeout 10s;
+    client_header_timeout 10s;
+    keepalive_timeout 5s 5s;
+    send_timeout 10s;
 }
 EOL
 
@@ -204,7 +229,7 @@ fi
 if [ $Certbot = 'y' ]; then
     echo 'Starting certbot...'
 
-    certbot --nginx 
+    certbot --nginx
 
     echo -e "${GREEN}Certbot done...${NC}"
 fi

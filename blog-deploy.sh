@@ -30,7 +30,7 @@ echo -e "   * /opt/ambrest - this is where your blogs will be stored under their
 echo -e "   * /opt/ambrest/scripts - this is where the vue-blogfront cli tool will be installed."
 echo -e "   * /opt/ambrest/logs - this is where the output from the installer will be stored.\n"
 
-echo -e "To confirm that you have read and fully understand and agree to the above statements and the ${PURPLE}vue-blogfront${NC} license found at ${PURPLE}https://git.ambrest.io/Ambrest-Designs-LLC/vue-blogfront${NC}, please type the following numbers: ${NUMBER}\n"
+echo -e "To confirm that you have read and fully understand and agree to the above statements and the ${PURPLE}vue-blogfront${NC} license found at ${PURPLE}https://github.com/ambrest/vue-blogfront${NC}, please type the following numbers: ${NUMBER}\n"
 
 read -p 'Confirmation: ' UserInput
 

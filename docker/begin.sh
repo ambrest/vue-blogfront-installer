@@ -6,7 +6,7 @@ cd /tmp
 
 # Install production version of vue-blogfront
 echo "Updating vue-blogfront..."
-git clone https://git.ambrest.io/Ambrest-Designs-LLC/vue-blogfront.git
+git clone https://github.com/ambrest/vue-blogfront.git
 cd /tmp/vue-blogfront
 
 echo "Configuring vue-blogfront..."
@@ -29,7 +29,7 @@ rm -rf /tmp/vue-blogfront
 
 # Install production version of vue-blogfront-api
 echo "Updating vue-blogfront-api..."
-git clone https://git.ambrest.io/Ambrest-Designs-LLC/vue-blogfront-api.git /opt/ambrest/vue-blog/backend
+git clone https://github.com/ambrest/vue-blogfront-api.git /opt/ambrest/vue-blog/backend
 cd /opt/ambrest/vue-blog/backend
 
 echo "Installing vue-blogfront-api dependencies..."

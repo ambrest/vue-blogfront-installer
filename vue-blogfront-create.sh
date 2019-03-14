@@ -137,6 +137,13 @@ server {
     listen 80;
     server_name ${Domain};
 
+    location ~ (precache-manifest.*|service-worker)\.js {
+        add_header Cache-Control 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+        expires off;
+        access_log off;
+        proxy_pass http://localhost:${Port};
+    }
+
     location / {
         proxy_pass http://localhost:${Port};
     }
@@ -198,6 +205,7 @@ cat > ./config/api.config.json <<EOL
         "startingMessage": "Server started on port 4000...",
         "domain": "https://${Domain}",
         "api": "https://${Domain}",
+        "maxClapps": 50,
         "emailVerification": false
     },
     "mail": {
